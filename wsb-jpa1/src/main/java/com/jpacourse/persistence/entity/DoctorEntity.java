@@ -2,95 +2,92 @@ package com.jpacourse.persistence.entity;
 
 import com.jpacourse.persistence.enums.Specialization;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "DOCTOR")
 public class DoctorEntity {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@Column(nullable = false)
-	private String firstName;
+    @Column(nullable = false)
+    private String firstName;
 
-	@Column(nullable = false)
-	private String lastName;
+    @Column(nullable = false)
+    private String lastName;
 
-	@Column(nullable = false)
-	private String telephoneNumber;
+    @Column(nullable = false)
+    private String telephoneNumber;
 
-	private String email;
+    private String email;
 
-	@Column(nullable = false)
-	private String doctorNumber;
+    @Column(nullable = false)
+    private String doctorNumber;
 
-	@Column(nullable = false)
-	@Enumerated(EnumType.STRING)
-	private Specialization specialization;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Specialization specialization;
 
-	public Long getId() {
-		return id;
-	}
+    @OneToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "address_id", referencedColumnName = "id", nullable = false)
+    private AddressEntity address;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public String getFirstName() {
-		return firstName;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+    public String getFirstName() {
+        return firstName;
+    }
 
-	public String getLastName() {
-		return lastName;
-	}
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+    public String getLastName() {
+        return lastName;
+    }
 
-	public String getTelephoneNumber() {
-		return telephoneNumber;
-	}
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-	public void setTelephoneNumber(String telephoneNumber) {
-		this.telephoneNumber = telephoneNumber;
-	}
+    public String getTelephoneNumber() {
+        return telephoneNumber;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public void setTelephoneNumber(String telephoneNumber) {
+        this.telephoneNumber = telephoneNumber;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public String getDoctorNumber() {
-		return doctorNumber;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public void setDoctorNumber(String doctorNumber) {
-		this.doctorNumber = doctorNumber;
-	}
+    public String getDoctorNumber() {
+        return doctorNumber;
+    }
 
-	public Specialization getSpecialization() {
-		return specialization;
-	}
+    public void setDoctorNumber(String doctorNumber) {
+        this.doctorNumber = doctorNumber;
+    }
 
-	public void setSpecialization(Specialization specialization) {
-		this.specialization = specialization;
-	}
+    public Specialization getSpecialization() {
+        return specialization;
+    }
+
+    public void setSpecialization(Specialization specialization) {
+        this.specialization = specialization;
+    }
 
 }
