@@ -1,44 +1,23 @@
-package com.jpacourse.persistence.entity;
+package com.jpacourse.dto;
 
+import com.jpacourse.persistence.entity.AddressEntity;
+import com.jpacourse.persistence.entity.VisitEntity;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-import javax.persistence.*;
-
-@Entity
-@Table(name = "PATIENT")
-public class PatientEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class PatientTO implements Serializable
+{
     private Long id;
-
-    @Column(nullable = false)
     private String firstName;
-
-    @Column(nullable = false)
     private String lastName;
-
-    @Column(nullable = false)
     private String telephoneNumber;
-
     private String email;
-
-    @Column(nullable = false)
     private String patientNumber;
-
-    @Column(nullable = false)
     private LocalDate dateOfBirth;
-
-    @Column(nullable = false)
-    private char gender;
-
-    @OneToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "address_id", referencedColumnName = "id")
     private AddressEntity address;
-
-    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
     private List<VisitEntity> visits;
+    private char gender;
 
     public Long getId() {
         return id;
@@ -64,20 +43,20 @@ public class PatientEntity {
         this.lastName = lastName;
     }
 
-    public String getTelephoneNumber() {
-        return telephoneNumber;
-    }
-
-    public void setTelephoneNumber(String telephoneNumber) {
-        this.telephoneNumber = telephoneNumber;
-    }
-
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getTelephoneNumber() {
+        return telephoneNumber;
+    }
+
+    public void setTelephoneNumber(String telephoneNumber) {
+        this.telephoneNumber = telephoneNumber;
     }
 
     public String getPatientNumber() {
@@ -96,14 +75,6 @@ public class PatientEntity {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public char getGender() {
-        return gender;
-    }
-
-    public void setGender(char gender) {
-        this.gender = gender;
-    }
-
     public AddressEntity getAddress() {
         return address;
     }
@@ -118,5 +89,13 @@ public class PatientEntity {
 
     public void setVisits(List<VisitEntity> visits) {
         this.visits = visits;
+    }
+
+    public char getGender() {
+        return gender;
+    }
+
+    public void setGender(char gender) {
+        this.gender = gender;
     }
 }

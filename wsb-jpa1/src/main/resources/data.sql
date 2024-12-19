@@ -20,13 +20,13 @@ VALUES
 ('DOC004', 'Michael', 'Johnson', '555-0104', 'michaeljohnson@email.com', 'OCULIST', 4),
 ('DOC005', 'Sarah', 'Williams', '555-0105', 'sarahwilliams@email.com', 'SURGEON', 5);
 
-INSERT INTO patient (patient_number, first_name, last_name, telephone_number, email, date_of_birth, address_id)
+INSERT INTO patient (patient_number, first_name, last_name, telephone_number, email, date_of_birth, address_id, gender)
 VALUES
-('PAT001', 'Alice', 'Green', '555-1001', 'alicegreen@email.com', '1990-05-14', 6),
-('PAT002', 'Bob', 'White', '555-1002', 'bobwhite@email.com', '1985-07-22', 7),
-('PAT003', 'Charlie', 'Black', '555-1003', 'charlieblack@email.com', '1992-11-30', 8),
-('PAT004', 'Daisy', 'Blue', '555-1004', 'daisyblue@email.com', '1988-03-12', 9),
-('PAT005', 'Eve', 'Red', '555-1005', 'evered@email.com', '1995-09-18', 10);
+('PAT001', 'Alice', 'Green', '555-1001', 'alicegreen@email.com', '1990-05-14', 6, 'F'),
+('PAT002', 'Bob', 'White', '555-1002', 'bobwhite@email.com', '1985-07-22', 7, 'M'),
+('PAT003', 'Charlie', 'Black', '555-1003', 'charlieblack@email.com', '1992-11-30', 8, 'M'),
+('PAT004', 'Daisy', 'Blue', '555-1004', 'daisyblue@email.com', '1988-03-12', 9, 'F'),
+('PAT005', 'Eve', 'Red', '555-1005', 'evered@email.com', '1995-09-18', 10, 'F');
 
 INSERT INTO medical_treatment (description, type)
 VALUES
