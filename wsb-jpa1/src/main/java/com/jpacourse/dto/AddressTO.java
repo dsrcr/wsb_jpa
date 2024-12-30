@@ -2,8 +2,12 @@ package com.jpacourse.dto;
 
 import java.io.Serializable;
 
-public class AddressTO implements Serializable
-{
+/**
+ * Transfer Object (TO) class that represents an address.
+ * This class is used to transfer address data between different layers of the application.
+ * It contains the necessary address details, including address lines, city, and postal code.
+ */
+public class AddressTO implements Serializable {
     private Long id;
 
     private String city;

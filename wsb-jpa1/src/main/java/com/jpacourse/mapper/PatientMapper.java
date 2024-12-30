@@ -3,14 +3,22 @@ package com.jpacourse.mapper;
 import com.jpacourse.dto.PatientTO;
 import com.jpacourse.persistence.entity.PatientEntity;
 
-public final class PatientMapper
-{
-    public static PatientTO mapToTO(final PatientEntity patientEntity)
-    {
-        if (patientEntity == null)
-        {
-            return null;
-        }
+/**
+ * Utility class for mapping between PatientEntity and PatientTO (Transfer Object).
+ * Provides methods to convert between the persistence layer's entity representation
+ * and the transfer object used in business logic or presentation layers.
+ */
+public final class PatientMapper {
+
+    /**
+     * Maps a PatientEntity to a PatientTO.
+     *
+     * @param patientEntity the PatientEntity to be converted
+     * @return a PatientTO object containing the same data as the provided PatientEntity,
+     *         or null if the input PatientEntity is null
+     */
+    public static PatientTO mapToTO(final PatientEntity patientEntity) {
+        if (patientEntity == null) return null;
 
         final PatientTO patientTO = new PatientTO();
         patientTO.setId(patientEntity.getId());
@@ -28,12 +36,15 @@ public final class PatientMapper
         return patientTO;
     }
 
-    public static PatientEntity mapToEntity(final PatientTO patientTO)
-    {
-        if(patientTO == null)
-        {
-            return null;
-        }
+    /**
+     * Maps a PatientTO to a PatientEntity.
+     *
+     * @param patientTO the PatientTO to be converted
+     * @return a PatientEntity object containing the same data as the provided PatientTO,
+     *         or null if the input PatientTO is null
+     */
+    public static PatientEntity mapToEntity(final PatientTO patientTO) {
+        if (patientTO == null) return null;
 
         PatientEntity patientEntity = new PatientEntity();
         patientEntity.setId(patientTO.getId());

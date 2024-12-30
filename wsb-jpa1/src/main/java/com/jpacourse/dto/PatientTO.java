@@ -2,12 +2,17 @@ package com.jpacourse.dto;
 
 import com.jpacourse.persistence.entity.AddressEntity;
 import com.jpacourse.persistence.entity.VisitEntity;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-public class PatientTO implements Serializable
-{
+/**
+ * Transfer Object (TO) class that represents a patient.
+ * This class is used to transfer patient data between layers (e.g., service to controller).
+ * It contains the necessary patient details such as personal information, address, and visits.
+ */
+public class PatientTO implements Serializable {
     private Long id;
     private String firstName;
     private String lastName;

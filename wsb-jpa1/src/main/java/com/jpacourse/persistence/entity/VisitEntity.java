@@ -1,8 +1,7 @@
 package com.jpacourse.persistence.entity;
 
-import java.time.LocalDateTime;
-
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "VISIT")
@@ -17,15 +16,15 @@ public class VisitEntity {
     @Column(nullable = false)
     private LocalDateTime time;
 
-    @ManyToOne
-    @JoinColumn(name = "doctor_id")
-    private DoctorEntity doctor;
-
-    @ManyToOne
-    @JoinColumn(name = "patient_id")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "patient_id", nullable = false)
     private PatientEntity patient;
 
     @ManyToOne
+    @JoinColumn(name = "doctor_id", nullable = false)
+    private DoctorEntity doctor;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "medical_treatment_id")
     private MedicalTreatmentEntity medicalTreatment;
 
@@ -53,4 +52,30 @@ public class VisitEntity {
         this.time = time;
     }
 
+    public PatientEntity getPatient() {
+        return patient;
+    }
+
+    public void setPatient(PatientEntity patient) {
+        this.patient = patient;
+        if (patient != null && !patient.getVisits().contains(this)) {
+            patient.getVisits().add(this);
+        }
+    }
+
+    public DoctorEntity getDoctor() {
+        return doctor;
+    }
+
+    public void setDoctor(DoctorEntity doctor) {
+        this.doctor = doctor;
+    }
+
+    public MedicalTreatmentEntity getMedicalTreatment() {
+        return medicalTreatment;
+    }
+
+    public void setMedicalTreatment(MedicalTreatmentEntity medicalTreatment) {
+        this.medicalTreatment = medicalTreatment;
+    }
 }
