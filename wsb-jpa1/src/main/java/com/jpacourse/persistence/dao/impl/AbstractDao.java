@@ -88,7 +88,8 @@ public abstract class AbstractDao<T, K extends Serializable> implements Dao<T, K
 	 */
 	@Override
 	public T update(T entity) {
-		return entityManager.merge(entity);
+		entityManager.flush();
+		 return entityManager.merge(entity);
 	}
 
 	/**

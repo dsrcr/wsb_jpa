@@ -1,10 +1,9 @@
 package com.jpacourse.persistence.entity;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.persistence.*;
 
 @Entity
 @Table(name = "PATIENT")
@@ -38,8 +37,15 @@ public class PatientEntity {
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private AddressEntity address;
 
-    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
-    private List<VisitEntity> visits = new ArrayList<>();  // Ensure this list is initialized
+    @Version
+    @Column(name = "version", columnDefinition = "integer DEFAULT 0", nullable = false)
+    private long version = 0L;
+
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<VisitEntity> visits;
+
+    @Column(nullable = false, unique = true)
+    private String idCardNumber;
 
     public Long getId() {
         return id;
@@ -129,5 +135,21 @@ public class PatientEntity {
     public void removeVisit(VisitEntity visit) {
         visits.remove(visit);
         visit.setPatient(null);
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
+    public String getIdCardNumber() {
+        return idCardNumber;
+    }
+
+    public void setIdCardNumber(String idCardNumber) {
+        this.idCardNumber = idCardNumber;
     }
 }

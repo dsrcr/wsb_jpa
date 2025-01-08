@@ -4,10 +4,13 @@ import com.jpacourse.dto.PatientTO;
 import com.jpacourse.mapper.PatientMapper;
 import com.jpacourse.persistence.dao.PatientDao;
 import com.jpacourse.persistence.entity.PatientEntity;
+import com.jpacourse.persistence.entity.VisitEntity;
 import com.jpacourse.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * Service implementation for managing patients.
@@ -45,6 +48,18 @@ public class PatientServiceImpl implements PatientService {
     }
 
     /**
+     * @param patientId
+     * @return
+     */
+    @Override
+    public List<VisitEntity> findVisitsByPatientId(Long patientId) {
+        PatientEntity patient = patientDao.findOne(patientId);
+        if (patient != null) return patient.getVisits();
+        else throw new RuntimeException("Patient not found with ID: " + patientId);
+
+    }
+
+    /**
      * Deletes a patient from the database by their unique identifier (ID).
      * If the patient exists, they will be removed from the database.
      * If no patient is found with the given ID, a {@link RuntimeException} will be thrown.
@@ -56,10 +71,8 @@ public class PatientServiceImpl implements PatientService {
     public void deletePatient(Long patientId) {
         PatientEntity patientEntity = patientDao.findOne(patientId);
 
-        if (patientEntity != null) {
-            patientDao.delete(patientEntity);
-        } else {
-            throw new RuntimeException("Patient not found with ID: " + patientId);
-        }
+        if (patientEntity != null) patientDao.delete(patientEntity);
+        else throw new RuntimeException("Patient not found with ID: " + patientId);
+
     }
 }

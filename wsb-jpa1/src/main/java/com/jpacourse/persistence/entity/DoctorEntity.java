@@ -30,7 +30,7 @@ public class DoctorEntity {
     @Enumerated(EnumType.STRING)
     private Specialization specialization;
 
-    @OneToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "address_id", referencedColumnName = "id", nullable = false)
     private AddressEntity address;
 
@@ -91,5 +91,11 @@ public class DoctorEntity {
     }
 
     public void setAddress(AddressEntity address) {
+        this.address = address;
     }
+
+    public AddressEntity getAddress() {
+        return address;
+    }
+
 }

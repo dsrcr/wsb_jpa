@@ -1,11 +1,13 @@
 package com.jpacourse.persistence.entity;
 
+import org.hibernate.engine.internal.Cascade;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "VISIT")
-public class VisitEntity {
+public class    VisitEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,10 +18,9 @@ public class VisitEntity {
     @Column(nullable = false)
     private LocalDateTime time;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "patient_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "patient_id", foreignKey = @ForeignKey(name = "fk_patient_id", value = ConstraintMode.CONSTRAINT), nullable = false)
     private PatientEntity patient;
-
     @ManyToOne
     @JoinColumn(name = "doctor_id", nullable = false)
     private DoctorEntity doctor;
@@ -58,9 +59,6 @@ public class VisitEntity {
 
     public void setPatient(PatientEntity patient) {
         this.patient = patient;
-        if (patient != null && !patient.getVisits().contains(this)) {
-            patient.getVisits().add(this);
-        }
     }
 
     public DoctorEntity getDoctor() {
@@ -79,3 +77,4 @@ public class VisitEntity {
         this.medicalTreatment = medicalTreatment;
     }
 }
+
