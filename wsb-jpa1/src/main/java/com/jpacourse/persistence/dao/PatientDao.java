@@ -36,16 +36,16 @@ public interface PatientDao extends Dao<PatientEntity, Long> {
      */
     List<PatientEntity> findByLastName(String lastName);
 
-    /**
-     * Finds patients who have more than a specified number of visits.
-     * This method retrieves a list of patients who have more than {@code visitCount} visits. The number
-     * of visits is determined by counting the records associated with each patient in the visits table.
-     *
-     * @param visitCount the minimum number of visits a patient must have to be included in the result
-     * @return a list of {@link PatientEntity} objects representing the patients who have more than the specified
-     * number of visits, or an empty list if no patients meet the criteria
-     */
-    List<PatientEntity> findPatientsWithMoreThanXVisits(int visitCount);
+//    /**
+//     * Finds patients who have more than a specified number of visits.
+//     * This method retrieves a list of patients who have more than {@code visitCount} visits. The number
+//     * of visits is determined by counting the records associated with each patient in the visits table.
+//     *
+//     * @param visitCount the minimum number of visits a patient must have to be included in the result
+//     * @return a list of {@link PatientEntity} objects representing the patients who have more than the specified
+//     * number of visits, or an empty list if no patients meet the criteria
+//     */
+//    List<PatientEntity> findPatientsWithMoreThanXVisits(int visitCount);
 
     List<PatientEntity> findPatientsByIdCardNumberContaining(String partialIdCardNumber);
 

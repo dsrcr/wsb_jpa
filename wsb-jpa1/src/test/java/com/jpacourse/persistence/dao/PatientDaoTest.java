@@ -7,12 +7,16 @@ import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.OptimisticLockException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -85,28 +89,48 @@ class PatientDaoTest {
     }
 
     @Test
-    public void testOptimisticLockingWhenChangingEmail() {
-        PatientEntity patient = patientDao.findOne(1L);
-        assertNotNull(patient);
-        assertEquals(0, patient.getVersion());
-
-        patient.setEmail("new.email1@example.com");
-        patientDao.update(patient);
-
-        PatientEntity patientInThread2 = patientDao.findOne(1L);
-        assertNotNull(patientInThread2);
-        patientInThread2.setEmail("new.email2@example.com");
+    public void testOptimisticLockingWhenChangingEmail() throws InterruptedException {
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
 
         try {
-            patientDao.update(patientInThread2);
-        } catch (OptimisticLockException e) {
-            System.out.println("Optimistic lock exception triggered");
+            Runnable task1 = () -> {
+                PatientEntity patient1 = patientDao.findOne(1L);
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException(e);
+                }
+                patient1.setEmail("newemail@newdomain.com");
+
+                assertThrows(ObjectOptimisticLockingFailureException.class, () -> {
+                    patientDao.update(patient1);
+                });
+            };
+
+            Runnable task2 = () -> {
+                PatientEntity patient2 = patientDao.findOne(1L);
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException(e);
+                }
+                patient2.setTelephoneNumber("evenneweremail@evennewerdomain.com");
+                patientDao.update(patient2);
+            };
+
+            Future<?> future1 = executorService.submit(task1);
+            Future<?> future2 = executorService.submit(task2);
+
+            try {
+                future1.get();
+                future2.get();
+            } catch (ExecutionException e) {
+                throw new RuntimeException("Task execution failed", e);
+            }
+        } finally {
+            executorService.shutdown();
         }
-
-        PatientEntity updatedPatient = patientDao.findOne(1L);
-        assertNotNull(updatedPatient);
-        assertEquals("new.email2@example.com", updatedPatient.getEmail());
-        assertEquals(2, updatedPatient.getVersion());
     }
-
 }

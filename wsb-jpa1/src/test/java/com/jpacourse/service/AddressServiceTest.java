@@ -3,7 +3,6 @@ package com.jpacourse.service;
 import com.jpacourse.dto.AddressTO;
 import com.jpacourse.persistence.dao.AddressDao;
 import com.jpacourse.persistence.entity.AddressEntity;
-import com.jpacourse.service.impl.AddressServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
-
 class AddressServiceTest {
 
     @Autowired

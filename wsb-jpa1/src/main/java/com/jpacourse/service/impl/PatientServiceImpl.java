@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -48,21 +50,24 @@ public class PatientServiceImpl implements PatientService {
     }
 
     /**
-     * @param patientId
-     * @return
+     * Retrieves all visits associated with a specific patient by their unique identifier (ID).
+     * If the patient exists, this method will return their list of visits; otherwise, it will return an empty list.
+     *
+     * @param patientId the unique identifier of the patient whose visits are to be fetched
+     * @return a list of {@link VisitEntity} objects associated with the patient, or an empty list if no visits are found
      */
     @Override
     public List<VisitEntity> findVisitsByPatientId(Long patientId) {
         PatientEntity patient = patientDao.findOne(patientId);
-        if (patient != null) return patient.getVisits();
-        else throw new RuntimeException("Patient not found with ID: " + patientId);
-
+        if (patient != null) return patient.getVisits() != null ? patient.getVisits() : Collections.emptyList();
+        else return new ArrayList<>();
     }
 
     /**
      * Deletes a patient from the database by their unique identifier (ID).
      * If the patient exists, they will be removed from the database.
      * If no patient is found with the given ID, a {@link RuntimeException} will be thrown.
+     * This operation will also trigger cascading delete behavior for related entities, such as visits.
      *
      * @param patientId the unique identifier of the patient to be deleted
      * @throws RuntimeException if no patient is found with the provided ID
@@ -73,6 +78,5 @@ public class PatientServiceImpl implements PatientService {
 
         if (patientEntity != null) patientDao.delete(patientEntity);
         else throw new RuntimeException("Patient not found with ID: " + patientId);
-
     }
 }

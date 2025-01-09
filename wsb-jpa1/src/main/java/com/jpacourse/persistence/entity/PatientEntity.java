@@ -41,8 +41,9 @@ public class PatientEntity {
     @Column(name = "version", columnDefinition = "integer DEFAULT 0", nullable = false)
     private long version = 0L;
 
-    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<VisitEntity> visits;
+    @OneToMany(mappedBy = "patient", cascade = {CascadeType.ALL}, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<VisitEntity> visits = new ArrayList<>();
+
 
     @Column(nullable = false, unique = true)
     private String idCardNumber;
@@ -127,23 +128,6 @@ public class PatientEntity {
         this.visits = visits;
     }
 
-    public void addVisit(VisitEntity visit) {
-        visits.add(visit);
-        visit.setPatient(this);
-    }
-
-    public void removeVisit(VisitEntity visit) {
-        visits.remove(visit);
-        visit.setPatient(null);
-    }
-
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
-    }
 
     public String getIdCardNumber() {
         return idCardNumber;

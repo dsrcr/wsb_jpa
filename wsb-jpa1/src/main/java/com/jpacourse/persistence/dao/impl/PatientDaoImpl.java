@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * Implementation of the PatientDao interface.
+ * Implementation of the {@link PatientDao} interface.
  * Provides methods for accessing and manipulating patient data,
  * including adding visits to a patient.
  */
@@ -20,13 +20,14 @@ public class PatientDaoImpl extends AbstractDao<PatientEntity, Long> implements 
 
     /**
      * Adds a new visit to a patient by associating a doctor, visit time, and description to the patient.
-     * This method creates a new VisitEntity and links it to the specified patient and doctor.
+     * This method creates a new {@link VisitEntity} and links it to the specified patient and doctor.
      *
      * @param patientId   the ID of the patient to whom the visit will be added
      * @param doctorId    the ID of the doctor associated with the visit
      * @param visitTime   the time at which the visit takes place
      * @param description a description or notes related to the visit
-     * @return the created VisitEntity object representing the new visit
+     * @return the created {@link VisitEntity} object representing the new visit
+     * @throws IllegalArgumentException if the patient or doctor is not found
      */
     @Override
     @Transactional
@@ -48,7 +49,6 @@ public class PatientDaoImpl extends AbstractDao<PatientEntity, Long> implements 
         return visit;
     }
 
-
     /**
      * Finds patients by their last name.
      * This method retrieves a list of patients whose last name matches the provided {@code lastName}.
@@ -61,26 +61,7 @@ public class PatientDaoImpl extends AbstractDao<PatientEntity, Long> implements 
     @Override
     public List<PatientEntity> findByLastName(String lastName) {
         String jpql = "SELECT p FROM PatientEntity p WHERE p.lastName = :last_name";
-        return entityManager.createQuery(jpql, PatientEntity.class)
-                .setParameter("last_name", lastName)
-                .getResultList();
-    }
-
-    /**
-     * Finds patients who have more than a specified number of visits.
-     * This method retrieves a list of patients who have more than {@code visitCount} visits. The number
-     * of visits is determined by counting the records associated with each patient in the visits table.
-     *
-     * @param visitCount the minimum number of visits a patient must have to be included in the result
-     * @return a list of {@link PatientEntity} objects representing the patients who have more than the specified
-     * number of visits, or an empty list if no patients meet the criteria
-     */
-    @Override
-    public List<PatientEntity> findPatientsWithMoreThanXVisits(int visitCount) {
-        String jpql = "SELECT p FROM PatientEntity p WHERE SIZE(p.visits) > :visitCount";
-        return entityManager.createQuery(jpql, PatientEntity.class)
-                .setParameter("visitCount", visitCount)
-                .getResultList();
+        return entityManager.createQuery(jpql, PatientEntity.class).setParameter("last_name", lastName).getResultList();
     }
 
     /**
@@ -94,22 +75,20 @@ public class PatientDaoImpl extends AbstractDao<PatientEntity, Long> implements 
     @Override
     public List<PatientEntity> findPatientsByIdCardNumberContaining(String partialIdCardNumber) {
         String jpql = "SELECT p FROM PatientEntity p WHERE p.idCardNumber LIKE :partialIdCardNumber";
-        return entityManager.createQuery(jpql, PatientEntity.class)
-                .setParameter("partialIdCardNumber", "%" + partialIdCardNumber + "%")
-                .getResultList();
+        return entityManager.createQuery(jpql, PatientEntity.class).setParameter("partialIdCardNumber", "%" + partialIdCardNumber + "%").getResultList();
     }
 
     /**
-     * @param gender
-     * @return
+     * Finds patients by their gender.
+     * This method retrieves a list of patients whose gender matches the provided {@code gender}.
+     *
+     * @param gender the gender of the patients to search for
+     * @return a list of {@link PatientEntity} objects representing the patients with the given gender,
+     * or an empty list if no patients are found
      */
     @Override
     public List<PatientEntity> findByGender(char gender) {
         String jpql = "SELECT p FROM PatientEntity p WHERE p.gender = :gender";
-
-        return entityManager.createQuery(jpql, PatientEntity.class)
-                .setParameter("gender", gender)
-                .getResultList();
+        return entityManager.createQuery(jpql, PatientEntity.class).setParameter("gender", gender).getResultList();
     }
-
 }

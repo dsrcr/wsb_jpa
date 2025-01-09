@@ -18,9 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 public class AddressDaoTest {
 
-    /**
-     * The AddressDao instance used to interact with the database in the tests.
-     */
     @Autowired
     private AddressDao addressDao;
 
