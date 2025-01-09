@@ -1,79 +1,94 @@
 package com.jpacourse.service;
 
 import com.jpacourse.dto.PatientTO;
-import com.jpacourse.persistence.dao.PatientDao;
-import com.jpacourse.persistence.entity.PatientEntity;
+import com.jpacourse.persistence.dao.DoctorDao;
 import com.jpacourse.persistence.entity.VisitEntity;
-import com.jpacourse.service.impl.PatientServiceImpl;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Optional;
+import javax.transaction.Transactional;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for the PatientService class, which provides business logic for handling PatientEntity operations.
  * This class tests the interaction between the service layer and the persistence layer (PatientDao).
  */
+@SpringBootTest
+@RunWith(SpringRunner.class)
+@Transactional
 class PatientServiceTest {
 
-    private final PatientDao patientDao = mock(PatientDao.class);
+    @Autowired
+    private PatientService patientService;
 
-    private final PatientService patientService = new PatientServiceImpl(patientDao);
-
+    @Autowired
+    private DoctorDao doctorDao;
 
     /**
-     * Test the  method to ensure that a patient is deleted
-     * correctly, and associated visits are removed (cascade). It also ensures that doctors are not deleted.
+     * Test the {@link PatientService#deletePatient(Long)} method to ensure that when a patient is deleted:
+     * 1. The patient's visits are also deleted (cascaded).
+     * 2. The patient is no longer available in the system (Patient is removed).
+     * 3. The doctors' data is not affected.
      */
     @Test
-    void testDeletePatient() {
-        PatientEntity patientEntity = new PatientEntity();
-        patientEntity.setId(1L);
-        patientEntity.setFirstName("John");
-        patientEntity.setLastName("Doe");
+    public void testShouldDeletePatientAndHisVisits() {
+        assertNotNull(patientService.findById(1L));
 
-        VisitEntity visitEntity = new VisitEntity();
-        visitEntity.setId(1L);
-        visitEntity.setDescription("Consultation");
-        visitEntity.setPatient(patientEntity);
-
-        when(patientDao.findOne(1L)).thenReturn(patientEntity);
-        doNothing().when(patientDao).delete(patientEntity);
+        int doctorsCountBefore = doctorDao.findAll().size();
+        assertNotNull(patientService.findVisitsByPatientId(1L));
 
         patientService.deletePatient(1L);
-
-        verify(patientDao, times(1)).delete(patientEntity);
-
-        verify(patientDao, times(1)).findOne(1L);
+        assertNull(patientService.findById(1L));
+        assertTrue(patientService.findVisitsByPatientId(1L).isEmpty());
+        assertEquals(doctorsCountBefore, doctorDao.findAll().size());
     }
 
     /**
      * Test the {@link PatientService#findById(Long)} method to ensure that a patient is fetched correctly
-     * by their ID and that the returned PatientTO contains the correct information, including the added field
-     * for 'gender'.
+     * by their ID and that the returned PatientTO contains the correct information, including:
+     * 1. First Name
+     * 2. Last Name
+     * 3. Patient Number
+     * 4. Gender
+     * 5. Date of Birth
+     * 6. Telephone Number
+     * 7. Email Address
+     * 8. Address ID
+     * 9. ID Card Number
      */
     @Test
     void testGetPatientById() {
-        PatientEntity patientEntity = new PatientEntity();
-        patientEntity.setId(1L);
-        patientEntity.setFirstName("Alice");
-        patientEntity.setLastName("Green");
-        patientEntity.setGender('F');
-        patientEntity.setPatientNumber("PAT001");
+        PatientTO patient = patientService.findById(1L);
 
-        when(patientDao.findOne(1L)).thenReturn(patientEntity);
+        assertEquals("Alice", patient.getFirstName());
+        assertEquals("Green", patient.getLastName());
+        assertEquals("PAT001", patient.getPatientNumber());
+        assertEquals('F', patient.getGender());
+        assertEquals(java.time.LocalDate.of(1990, 5, 14), patient.getDateOfBirth());
 
-        Optional<PatientTO> result = Optional.ofNullable(patientService.findById(1L));
+        assertEquals("555-1001", patient.getTelephoneNumber());
+        assertEquals("alicegreen@email.com", patient.getEmail());
 
-        assertTrue(result.isPresent());
-        assertEquals("Alice", result.get().getFirstName());
-        assertEquals("Green", result.get().getLastName());
-        assertEquals('F', result.get().getGender());
-        assertEquals("PAT001", result.get().getPatientNumber());
+        assertNotNull(patient.getAddress());
+        assertEquals(6L, patient.getAddress().getId());
+    }
 
-        verify(patientDao, times(1)).findOne(1L);
+    /**
+     * Test the {@link PatientService#findVisitsByPatientId(Long)} method to ensure that:
+     * 1. The method returns the correct list of visits for the specified patient.
+     * 2. The number of visits is correct.
+     */
+    @Test
+    void testFindVisitsByPatientId_PatientFound() {
+        List<VisitEntity> visits = patientService.findVisitsByPatientId(1L);
+
+        assertNotNull(visits, "The visits list should not be null.");
+
+        assertEquals(2, visits.size(), "There should be exactly 2 visits.");
     }
 }

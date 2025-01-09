@@ -43,26 +43,4 @@ public class AddressServiceImpl implements AddressService {
         final AddressEntity entity = addressDao.findOne(id);
         return AddressMapper.mapToTO(entity);
     }
-
-    /**
-     * Saves the provided address.
-     * This method will be used to persist a new or updated {@link AddressTO} in the database.
-     *
-     * @param address the {@link AddressTO} to be saved
-     */
-    @Override
-    public void saveAddress(AddressTO address) {
-        // Implementation should persist the address
-    }
-
-    /**
-     * Deletes an address by its unique identifier (ID).
-     * This method removes the address from the database if it exists.
-     *
-     * @param id the unique identifier of the address to be deleted
-     */
-    @Override
-    public void deleteAddress(Long id) {
-        // Implementation should delete the address by its ID
-    }
 }

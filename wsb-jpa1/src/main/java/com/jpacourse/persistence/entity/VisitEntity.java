@@ -16,15 +16,15 @@ public class VisitEntity {
     @Column(nullable = false)
     private LocalDateTime time;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "patient_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "patient_id", foreignKey = @ForeignKey(name = "fk_patient_id", value = ConstraintMode.CONSTRAINT))
     private PatientEntity patient;
 
     @ManyToOne
     @JoinColumn(name = "doctor_id", nullable = false)
     private DoctorEntity doctor;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     @JoinColumn(name = "medical_treatment_id")
     private MedicalTreatmentEntity medicalTreatment;
 
@@ -58,9 +58,6 @@ public class VisitEntity {
 
     public void setPatient(PatientEntity patient) {
         this.patient = patient;
-        if (patient != null && !patient.getVisits().contains(this)) {
-            patient.getVisits().add(this);
-        }
     }
 
     public DoctorEntity getDoctor() {
@@ -79,3 +76,4 @@ public class VisitEntity {
         this.medicalTreatment = medicalTreatment;
     }
 }
+

@@ -15,7 +15,7 @@ public final class PatientMapper {
      *
      * @param patientEntity the PatientEntity to be converted
      * @return a PatientTO object containing the same data as the provided PatientEntity,
-     *         or null if the input PatientEntity is null
+     * or null if the input PatientEntity is null
      */
     public static PatientTO mapToTO(final PatientEntity patientEntity) {
         if (patientEntity == null) return null;
@@ -41,7 +41,7 @@ public final class PatientMapper {
      *
      * @param patientTO the PatientTO to be converted
      * @return a PatientEntity object containing the same data as the provided PatientTO,
-     *         or null if the input PatientTO is null
+     * or null if the input PatientTO is null
      */
     public static PatientEntity mapToEntity(final PatientTO patientTO) {
         if (patientTO == null) return null;

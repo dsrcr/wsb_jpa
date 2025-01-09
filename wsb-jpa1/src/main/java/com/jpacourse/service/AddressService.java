@@ -16,18 +16,4 @@ public interface AddressService {
      * @return the AddressTO corresponding to the given ID, or null if no address is found
      */
     AddressTO findById(final Long id);
-
-    /**
-     * Saves the provided AddressTO object by creating or updating the address data in the database.
-     *
-     * @param address the AddressTO object to be saved
-     */
-    void saveAddress(AddressTO address);
-
-    /**
-     * Deletes the address with the specified ID from the database.
-     *
-     * @param id the ID of the address to be deleted
-     */
-    void deleteAddress(Long id);
 }
